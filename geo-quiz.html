@@ -1,0 +1,367 @@
+<!DOCTYPE html>
+<html lang="ka">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>რუკის ქვიზი</title>
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><defs><radialGradient id='g' cx='38%' cy='35%' r='60%'><stop offset='0%' stop-color='%232d8ecf'/><stop offset='100%' stop-color='%230b2d4e'/></radialGradient></defs><circle cx='50' cy='50' r='48' fill='url(%23g)'/><ellipse cx='50' cy='50' rx='18' ry='46' fill='none' stroke='rgba(150,210,255,0.4)' stroke-width='2'/><ellipse cx='50' cy='50' rx='46' ry='14' fill='none' stroke='rgba(150,210,255,0.4)' stroke-width='2'/></svg>">
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#080e1a;--s1:#0f1d30;--s2:#162440;
+  --br:#1e3352;--acc:#2563eb;--acc2:#3b82f6;
+  --gold:#f59e0b;--text:#f1f5f9;--muted:#64748b;--sub:#94a3b8;
+  --green:#22c55e;--red:#ef4444;
+}
+html,body{background:var(--bg);min-height:100%;font-family:system-ui,-apple-system,sans-serif;color:var(--text)}
+#wrap{
+  min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;
+  padding:20px;
+  background:radial-gradient(ellipse at 50% 0%,#0d2045 0%,var(--bg) 65%);
+}
+.card{width:100%;max-width:800px;background:var(--s1);border:1px solid var(--br);border-radius:24px;overflow:hidden;box-shadow:0 24px 64px rgba(0,0,0,.6)}
+.scr{display:none}.scr.on{display:flex;flex-direction:column}
+
+/* ── LOGO ── */
+.logo{display:flex;align-items:center;gap:12px;justify-content:center}
+.logo-globe{width:52px;height:52px}
+.logo-text{display:flex;flex-direction:column;line-height:1;text-align:left}
+.logo-main{font-size:28px;font-weight:900;letter-spacing:-.5px;
+  background:linear-gradient(135deg,#60a5fa,#a78bfa);
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent}
+.logo-sub{font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:2px;color:var(--muted);margin-top:2px}
+
+/* HOME */
+#ss{align-items:center;padding:52px 48px 48px;text-align:center;gap:0;position:relative;
+  background:radial-gradient(ellipse at 50% 0%,#0d2045 0%,transparent 65%)}
+.top-bar{position:absolute;top:20px;right:20px}
+.icon-btn{background:var(--s2);border:1px solid var(--br);border-radius:10px;width:44px;height:44px;cursor:pointer;font-size:18px;display:flex;align-items:center;justify-content:center;color:var(--sub)}
+.icon-btn:hover{background:var(--br)}
+@keyframes bob{0%,100%{transform:translateY(0)}50%{transform:translateY(-12px)}}
+@keyframes spin{from{transform:rotate(0deg)}to{transform:rotate(360deg)}}
+.globe-anim{animation:bob 3.5s ease-in-out infinite;margin:28px 0 32px}
+.globe-lines{animation:spin 20s linear infinite;transform-origin:70px 70px}
+#ss .tag{font-size:15px;color:var(--muted);margin-top:8px;margin-bottom:36px}
+.hi-card{display:none;align-items:center;gap:16px;
+  background:linear-gradient(135deg,rgba(245,158,11,.13),rgba(245,158,11,.04));
+  border:1px solid rgba(245,158,11,.28);border-radius:18px;
+  padding:18px 28px;margin-bottom:28px;width:100%;max-width:420px}
+.hi-card.show{display:flex}
+.hi-trophy{font-size:38px}
+.hi-body{display:flex;flex-direction:column;gap:2px;flex:1;text-align:left}
+.hi-lbl{font-size:11px;text-transform:uppercase;letter-spacing:.8px;color:var(--gold);opacity:.8}
+.hi-num{font-size:38px;font-weight:800;color:var(--gold);line-height:1}
+.hi-sub{font-size:12px;color:var(--muted)}
+.start-btn{padding:18px 64px;border:none;border-radius:16px;
+  background:linear-gradient(135deg,#2563eb,#1d4ed8);
+  color:#fff;font-size:20px;font-weight:700;cursor:pointer;font-family:inherit;
+  box-shadow:0 8px 28px rgba(37,99,235,.4);letter-spacing:-.2px;
+  transition:transform .12s,box-shadow .12s}
+.start-btn:hover{transform:translateY(-2px);box-shadow:0 12px 32px rgba(37,99,235,.5)}
+#lmsg{font-size:13px;color:var(--muted);margin-top:14px;display:none}
+.home-footer{margin-top:28px;font-size:11px;color:var(--muted);opacity:.6}
+
+/* SETTINGS */
+#sp{padding:48px 48px 52px;gap:28px;background:radial-gradient(ellipse at 50% 0%,#0d2045 0%,transparent 55%)}
+.sp-head{display:flex;align-items:center;justify-content:space-between}
+.sp-head .logo-main{font-size:22px}
+.sect-lbl{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.8px;color:var(--muted);margin-bottom:12px}
+.pills{display:flex;gap:10px;flex-wrap:wrap}
+.pill{padding:10px 20px;border:1.5px solid var(--br);border-radius:24px;cursor:pointer;font-size:14px;font-weight:500;color:var(--sub);background:var(--s2);transition:all .15s}
+.pill:hover{border-color:var(--acc2)}
+.pill.sel{border-color:var(--acc2);background:rgba(59,130,246,.2);color:#fff}
+.dcards{display:flex;gap:14px}
+.dcard{flex:1;border:2px solid var(--br);border-radius:18px;padding:20px 12px;cursor:pointer;text-align:center;background:var(--s2);transition:all .15s}
+.dcard:hover{border-color:var(--green)}
+.dcard.sel{border-color:var(--green);background:rgba(34,197,94,.08)}
+.dcard .dn{font-size:16px;font-weight:700;line-height:1}
+.dcard .di{font-size:11px;color:var(--muted);margin-top:7px;line-height:1.5}
+.dcard.sel .dn{color:#4ade80}
+.sp-btns{display:flex;gap:12px}
+.btn{border:none;border-radius:14px;padding:15px 24px;font-size:16px;font-weight:700;cursor:pointer;font-family:inherit;transition:all .12s}
+.btn.p{flex:1;background:linear-gradient(135deg,#2563eb,#1d4ed8);color:#fff;box-shadow:0 6px 20px rgba(37,99,235,.35)}
+.btn.p:hover{transform:translateY(-1px);box-shadow:0 8px 24px rgba(37,99,235,.45)}
+.btn.g{background:var(--s2);color:var(--sub);border:1px solid var(--br);padding:15px 20px}
+.btn.g:hover{background:var(--br)}
+
+/* GAME */
+#sg{gap:0}
+.ghdr{padding:14px 24px 0;background:linear-gradient(180deg,#0f1d30,transparent)}
+.gh-top{display:flex;align-items:flex-start;gap:12px;margin-bottom:14px}
+.sc-block{display:flex;flex-direction:column}
+.sc-lbl{font-size:10px;text-transform:uppercase;letter-spacing:.6px;color:var(--muted)}
+.sc-val{font-size:38px;font-weight:900;line-height:1}
+.stk-row{font-size:13px;font-weight:700;color:var(--gold);min-height:17px;margin-top:2px}
+.country-mid{flex:1;text-align:center;padding-top:2px}
+.game-logo{display:flex;align-items:center;gap:8px;justify-content:center;margin-bottom:4px;opacity:.5}
+.game-logo svg{width:18px;height:18px}
+.game-logo-txt{font-size:11px;font-weight:700;letter-spacing:1px;color:var(--sub)}
+.cname{font-size:28px;font-weight:800;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.cnum{font-size:11px;color:var(--muted);margin-top:3px}
+.ck-block{display:flex;flex-direction:column;align-items:flex-end}
+.ck-lbl{font-size:10px;text-transform:uppercase;letter-spacing:.6px;color:var(--muted)}
+.ck-val{font-size:36px;font-weight:900;letter-spacing:1px;line-height:1}
+.ck-val.warn{color:var(--red)}
+.gh-btns{display:flex;gap:8px;margin-left:12px}
+.mbtn{width:42px;height:42px;border:1px solid var(--br);border-radius:11px;background:var(--s1);color:var(--sub);cursor:pointer;font-size:16px;display:flex;align-items:center;justify-content:center;transition:all .12s}
+.mbtn:hover{background:var(--br)}
+.pbar{height:4px;background:var(--br);margin:12px 24px 0;border-radius:2px;overflow:hidden}
+.pfill{height:100%;border-radius:2px;background:linear-gradient(90deg,var(--acc),#60a5fa);transition:width .1s linear}
+#mwrap{position:relative;background:#060d18;line-height:0;margin:14px 16px 0;border-radius:16px;overflow:hidden}
+#mwrap svg{display:block;width:100%;cursor:grab;touch-action:none}
+#mwrap svg.dragging{cursor:grabbing}
+#zctrl{position:absolute;bottom:12px;right:12px;display:flex;flex-direction:column;gap:6px;z-index:10}
+#zctrl button{width:36px;height:36px;background:rgba(6,13,24,.85);border:1px solid rgba(255,255,255,.14);border-radius:10px;color:var(--sub);cursor:pointer;font-size:16px;display:flex;align-items:center;justify-content:center;backdrop-filter:blur(4px);transition:all .12s}
+#zctrl button:hover{background:rgba(37,99,235,.4);color:#fff}
+#cfw{position:absolute;top:0;left:0;width:100%;height:100%;pointer-events:none;overflow:hidden;z-index:20}
+.cfp{position:absolute;top:-10px}
+.fb{text-align:center;padding:12px 24px 6px;font-size:14px;font-weight:600;min-height:36px;color:var(--sub)}
+.hint-t{text-align:center;font-size:11px;color:var(--muted);padding-bottom:16px}
+
+/* END */
+#se{align-items:center;padding:56px 48px;text-align:center;gap:0;background:radial-gradient(ellipse at 50% 0%,#0d2045 0%,transparent 55%)}
+.end-inner{display:flex;flex-direction:column;align-items:center;gap:18px;width:100%;max-width:500px}
+.end-t{font-size:18px;font-weight:600;color:var(--sub)}
+.end-sc{font-size:96px;font-weight:900;background:linear-gradient(135deg,var(--acc2),#818cf8);-webkit-background-clip:text;-webkit-text-fill-color:transparent;line-height:1}
+.end-msg{font-size:16px;color:var(--sub)}
+.end-hi{display:flex;align-items:center;gap:10px;width:100%;justify-content:center;background:rgba(245,158,11,.1);border:1px solid rgba(245,158,11,.28);border-radius:14px;padding:14px 24px;font-size:16px;color:var(--gold)}
+.end-hi span{font-size:24px;font-weight:800}
+.stats{display:flex;width:100%;background:var(--s2);border-radius:18px;border:1px solid var(--br);overflow:hidden}
+.stat{flex:1;padding:20px 4px;text-align:center;border-right:1px solid var(--br)}
+.stat:last-child{border-right:none}
+.stn{font-size:28px;font-weight:800}
+.stl{font-size:10px;color:var(--muted);margin-top:4px}
+.end-btns{display:flex;gap:10px;width:100%}
+.end-logo{opacity:.35;margin-top:8px}
+</style>
+</head>
+<body>
+<div id="wrap">
+  <div class="card">
+
+    <!-- HOME -->
+    <div id="ss" class="scr on">
+      <div class="top-bar"><button class="icon-btn" id="themeBtn" onclick="toggleTheme()">☀️</button></div>
+
+      <!-- LOGO -->
+      <div class="logo">
+        <svg class="logo-globe" viewBox="0 0 140 140" xmlns="http://www.w3.org/2000/svg">
+          <defs>
+            <radialGradient id="og" cx="38%" cy="35%" r="60%"><stop offset="0%" stop-color="#2d8ecf"/><stop offset="100%" stop-color="#0b2d4e"/></radialGradient>
+            <radialGradient id="gl" cx="32%" cy="28%" r="55%"><stop offset="0%" stop-color="rgba(255,255,255,0.22)"/><stop offset="100%" stop-color="rgba(255,255,255,0)"/></radialGradient>
+            <clipPath id="gc"><circle cx="70" cy="70" r="60"/></clipPath>
+          </defs>
+          <circle cx="70" cy="70" r="60" fill="url(#og)"/>
+          <g clip-path="url(#gc)">
+            <ellipse cx="70" cy="70" rx="20" ry="60" fill="none" stroke="rgba(150,210,255,0.35)" stroke-width="2"/>
+            <ellipse cx="70" cy="70" rx="48" ry="60" fill="none" stroke="rgba(150,210,255,0.25)" stroke-width="2"/>
+            <ellipse cx="70" cy="70" rx="60" ry="20" fill="none" stroke="rgba(150,210,255,0.35)" stroke-width="2"/>
+            <ellipse cx="70" cy="46" rx="58" ry="14" fill="none" stroke="rgba(150,210,255,0.2)" stroke-width="1.5"/>
+            <ellipse cx="70" cy="94" rx="58" ry="14" fill="none" stroke="rgba(150,210,255,0.2)" stroke-width="1.5"/>
+          </g>
+          <circle cx="70" cy="70" r="60" fill="url(#gl)"/>
+          <circle cx="70" cy="70" r="60" fill="none" stroke="rgba(0,0,0,0.3)" stroke-width="3"/>
+        </svg>
+        <div class="logo-text">
+          <span class="logo-main">რუკის ქვიზი</span>
+          <span class="logo-sub">World Map Quiz</span>
+        </div>
+      </div>
+
+      <!-- Animated globe -->
+      <div class="globe-anim">
+        <svg width="140" height="140" viewBox="0 0 140 140" xmlns="http://www.w3.org/2000/svg">
+          <defs>
+            <radialGradient id="og2" cx="38%" cy="35%" r="60%"><stop offset="0%" stop-color="#2d8ecf"/><stop offset="100%" stop-color="#0b2d4e"/></radialGradient>
+            <radialGradient id="gl2" cx="32%" cy="28%" r="55%"><stop offset="0%" stop-color="rgba(255,255,255,0.22)"/><stop offset="100%" stop-color="rgba(255,255,255,0)"/></radialGradient>
+            <clipPath id="gc2"><circle cx="70" cy="70" r="60"/></clipPath>
+          </defs>
+          <circle cx="70" cy="70" r="60" fill="url(#og2)"/>
+          <g clip-path="url(#gc2)" class="globe-lines">
+            <ellipse cx="70" cy="70" rx="13" ry="60" fill="none" stroke="rgba(120,190,255,0.2)" stroke-width="1.2"/>
+            <ellipse cx="70" cy="70" rx="28" ry="60" fill="none" stroke="rgba(120,190,255,0.2)" stroke-width="1.2"/>
+            <ellipse cx="70" cy="70" rx="46" ry="60" fill="none" stroke="rgba(120,190,255,0.2)" stroke-width="1.2"/>
+            <ellipse cx="70" cy="48" rx="58" ry="13" fill="none" stroke="rgba(120,190,255,0.18)" stroke-width="1.2"/>
+            <ellipse cx="70" cy="70" rx="60" ry="9" fill="none" stroke="rgba(120,190,255,0.24)" stroke-width="1.2"/>
+            <ellipse cx="70" cy="92" rx="58" ry="13" fill="none" stroke="rgba(120,190,255,0.18)" stroke-width="1.2"/>
+          </g>
+          <circle cx="70" cy="70" r="60" fill="url(#gl2)"/>
+          <circle cx="70" cy="70" r="60" fill="none" stroke="rgba(0,0,0,0.35)" stroke-width="3"/>
+        </svg>
+      </div>
+
+      <div class="tag">გამოცანე ქვეყნები მსოფლიო რუკაზე</div>
+
+      <div class="hi-card" id="hi-card">
+        <div class="hi-trophy">🏆</div>
+        <div class="hi-body">
+          <span class="hi-lbl">საუკეთესო შედეგი</span>
+          <span class="hi-num" id="hi-card-score">0</span>
+          <span class="hi-sub">ქულა · ყველა დროის</span>
+        </div>
+      </div>
+
+      <button class="start-btn" id="sbtn">თამაშის დაწყება ▶</button>
+      <div id="lmsg">⏳ რუკა იტვირთება...</div>
+      <div class="home-footer">© 2025 რუკის ქვიზი · v1.0</div>
+    </div>
+
+    <!-- SETTINGS -->
+    <div id="sp" class="scr">
+      <div class="sp-head">
+        <div class="logo">
+          <svg width="32" height="32" viewBox="0 0 140 140" xmlns="http://www.w3.org/2000/svg">
+            <defs><radialGradient id="og3" cx="38%" cy="35%" r="60%"><stop offset="0%" stop-color="#2d8ecf"/><stop offset="100%" stop-color="#0b2d4e"/></radialGradient></defs>
+            <circle cx="70" cy="70" r="60" fill="url(#og3)"/>
+            <ellipse cx="70" cy="70" rx="20" ry="60" fill="none" stroke="rgba(150,210,255,0.4)" stroke-width="3"/>
+            <ellipse cx="70" cy="70" rx="60" ry="20" fill="none" stroke="rgba(150,210,255,0.4)" stroke-width="3"/>
+          </svg>
+          <span class="logo-main" style="font-size:20px">რუკის ქვიზი</span>
+        </div>
+        <button class="icon-btn" onclick="goHome()">🏠</button>
+      </div>
+
+      <div>
+        <div class="sect-lbl">კონტინენტი</div>
+        <div class="pills">
+          <div class="pill sel" id="cp_all" onclick="selCont('all')">🌍 ყველა</div>
+          <div class="pill" id="cp_eu" onclick="selCont('eu')">🇪🇺 ევროპა</div>
+          <div class="pill" id="cp_as" onclick="selCont('as')">🌏 აზია</div>
+        </div>
+      </div>
+      <div>
+        <div class="sect-lbl">სირთულე</div>
+        <div class="dcards">
+          <div class="dcard" id="dc_easy" onclick="selDiff('easy')"><div class="dn">მარტივი</div><div class="di">დიდი ქვეყნები<br>15წმ · 1 წუთი</div></div>
+          <div class="dcard sel" id="dc_medium" onclick="selDiff('medium')"><div class="dn">საშუალო</div><div class="di">ყველა ქვეყანა<br>10წმ · 1:30</div></div>
+          <div class="dcard" id="dc_hard" onclick="selDiff('hard')"><div class="dn">რთული</div><div class="di">ყველა ქვეყანა<br>7წმ · 2 წუთი</div></div>
+        </div>
+      </div>
+      <div class="sp-btns">
+        <button class="btn p" onclick="beginGame()">▶ დაწყება</button>
+        <button class="btn g" onclick="goHome()">🏠</button>
+      </div>
+    </div>
+
+    <!-- GAME -->
+    <div id="sg" class="scr">
+      <div class="ghdr">
+        <div class="gh-top">
+          <div class="sc-block">
+            <span class="sc-lbl">ქულა</span>
+            <span class="sc-val" id="sc">0</span>
+            <span class="stk-row" id="stk"></span>
+          </div>
+          <div class="country-mid">
+            <div class="game-logo">
+              <svg width="16" height="16" viewBox="0 0 140 140" xmlns="http://www.w3.org/2000/svg"><defs><radialGradient id="og4" cx="38%" cy="35%" r="60%"><stop offset="0%" stop-color="#2d8ecf"/><stop offset="100%" stop-color="#0b2d4e"/></radialGradient></defs><circle cx="70" cy="70" r="60" fill="url(#og4)"/><ellipse cx="70" cy="70" rx="20" ry="60" fill="none" stroke="rgba(150,210,255,0.5)" stroke-width="4"/><ellipse cx="70" cy="70" rx="60" ry="20" fill="none" stroke="rgba(150,210,255,0.5)" stroke-width="4"/></svg>
+              <span class="game-logo-txt">რუკის ქვიზი</span>
+            </div>
+            <div class="cname" id="qnm">—</div>
+            <div class="cnum" id="qcount"></div>
+          </div>
+          <div class="ck-block">
+            <span class="ck-lbl">დრო</span>
+            <span class="ck-val" id="gclock">—</span>
+          </div>
+          <div class="gh-btns">
+            <button class="mbtn" id="gmTheme" onclick="toggleTheme()">☀️</button>
+            <button class="mbtn" onclick="doRestart()" title="რესტარტი">↺</button>
+            <button class="mbtn" onclick="goHome()" title="მთავარი" style="font-size:18px">🏠</button>
+          </div>
+        </div>
+        <div class="pbar"><div class="pfill" id="tf" style="width:100%"></div></div>
+      </div>
+      <div id="mwrap">
+        <div id="msvg"></div>
+        <div id="cfw"></div>
+        <div id="zctrl">
+          <button onclick="zIn()">+</button>
+          <button onclick="zOut()">−</button>
+          <button onclick="zReset()" style="font-size:11px">↺</button>
+        </div>
+      </div>
+      <div class="fb" id="fb"></div>
+      <div class="hint-t">👆 დააჭირე ქვეყანას · scroll = zoom · drag = pan</div>
+    </div>
+
+    <!-- END -->
+    <div id="se" class="scr">
+      <div class="end-inner">
+        <div class="end-t">თამაში დასრულდა!</div>
+        <div class="end-sc" id="fsc">0</div>
+        <div class="end-msg" id="fsub"></div>
+        <div class="end-hi">🏆 საუკეთესო: <span id="hi-val">0</span> ქულა</div>
+        <div class="stats">
+          <div class="stat"><div class="stn" id="stat-ans">0</div><div class="stl">კითხვა</div></div>
+          <div class="stat"><div class="stn" id="stat-pct">0%</div><div class="stl">სიზუსტე</div></div>
+          <div class="stat"><div class="stn" id="stat-streak">0</div><div class="stl">🔥 streak</div></div>
+          <div class="stat"><div class="stn" id="stat-spd">0</div><div class="stl">⚡ სწრაფი</div></div>
+        </div>
+        <div class="end-btns">
+          <button class="btn p" onclick="doRestart()" style="flex:1.4">↺ თავიდან</button>
+          <button class="btn g" onclick="show('sp')">⚙️</button>
+          <button class="btn g" onclick="goHome()">🏠</button>
+        </div>
+        <div class="end-logo logo" style="margin-top:16px;opacity:.25">
+          <svg width="20" height="20" viewBox="0 0 140 140" xmlns="http://www.w3.org/2000/svg"><defs><radialGradient id="og5" cx="38%" cy="35%" r="60%"><stop offset="0%" stop-color="#2d8ecf"/><stop offset="100%" stop-color="#0b2d4e"/></radialGradient></defs><circle cx="70" cy="70" r="60" fill="url(#og5)"/><ellipse cx="70" cy="70" rx="20" ry="60" fill="none" stroke="rgba(150,210,255,0.5)" stroke-width="4"/><ellipse cx="70" cy="70" rx="60" ry="20" fill="none" stroke="rgba(150,210,255,0.5)" stroke-width="4"/></svg>
+          <span style="font-size:13px;font-weight:700;color:var(--sub)">რუკის ქვიზი</span>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/d3/7.8.5/d3.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/topojson/3.0.2/topojson.min.js"></script>
+<script>
+const ALL={4:'ავღანეთი',8:'ალბანეთი',12:'ალჟირი',24:'ანგოლა',32:'არგენტინა',36:'ავსტრალია',40:'ავსტრია',50:'ბანგლადეში',56:'ბელგია',64:'ბუტანი',68:'ბოლივია',72:'ბოტსვანა',76:'ბრაზილია',84:'ბელიზი',90:'სოლ. კუნძ.',96:'ბრუნეი',100:'ბულგარეთი',104:'მიანმარი',108:'ბურუნდი',116:'კამბოჯა',120:'კამერუნი',124:'კანადა',140:'ცენ. აფ. რ.',144:'შრი-ლანკა',148:'ჩადი',152:'ჩილე',156:'ჩინეთი',170:'კოლუმბია',178:'კონგო',180:'კონგო (დემ.)',188:'კოსტა-რიკა',191:'ხორვატია',192:'კუბა',196:'კვიპროსი',203:'ჩეხეთი',204:'ბენინი',208:'დანია',214:'დომ. რესპ.',218:'ეკვადორი',222:'სალვადორი',226:'ეკვ. გვინეა',231:'ეთიოპია',232:'ერიტრეა',233:'ესტონეთი',242:'ფიჯი',246:'ფინეთი',250:'საფრანგეთი',262:'ჯიბუტი',266:'გაბონი',270:'გამბია',275:'პალესტინა',276:'გერმანია',288:'განა',300:'საბერძნეთი',320:'გვატემალა',324:'გვინეა',328:'გაიანა',332:'ჰაიტი',340:'ჰონდურასი',348:'უნგრეთი',356:'ინდოეთი',360:'ინდონეზია',364:'ირანი',368:'ერაყი',372:'ირლანდია',376:'ისრაელი',380:'იტალია',384:"კოტ-დ'ივუარი",388:'იამაიკა',392:'იაპონია',398:'ყაზახეთი',400:'იორდანია',404:'კენია',408:'ჩრდ. კორეა',410:'სამხ. კორეა',414:'ქუვეითი',417:'ყირგიზეთი',418:'ლაოსი',422:'ლიბანი',426:'ლესოტო',430:'ლიბერია',434:'ლიბია',440:'ლიტვა',442:'ლუქსემბურგი',450:'მადაგასკარი',454:'მალავი',458:'მალაიზია',466:'მალი',478:'მავრიტანია',484:'მექსიკა',496:'მონღოლეთი',504:'მაროკო',508:'მოზამბიკი',516:'ნამიბია',524:'ნეპალი',528:'ნიდერლანდები',548:'ვანუატუ',554:'ახ. ზელანდია',558:'ნიკარაგუა',562:'ნიგერი',566:'ნიგერია',578:'ნორვეგია',586:'პაკისტანი',591:'პანამა',598:'პაპუა ახ. გ.',604:'პერუ',608:'ფილიპინები',616:'პოლონეთი',620:'პორტუგალია',624:'გვინეა-ბისაუ',634:'კატარი',642:'რუმინეთი',643:'რუსეთი',646:'რუანდა',682:'საუდ. არაბეთი',686:'სენეგალი',694:'სიერა-ლეონე',703:'სლოვაკია',704:'ვიეტნამი',706:'სომალი',710:'სამხ. აფრიკა',716:'ზიმბაბვე',724:'ესპანეთი',728:'სამხ. სუდანი',729:'სუდანი',740:'სურინამი',748:'ესვატინი',752:'შვეცია',756:'შვეიცარია',760:'სირია',762:'ტაჯიკეთი',764:'ტაილანდი',768:'ტოგო',780:'ტრინიდადი',784:'არაბ. საემ.',788:'ტუნისი',792:'თურქეთი',800:'უგანდა',804:'უკრაინა',818:'ეგვიპტე',826:'გაერთ. სამეფო',834:'ტანზანია',840:'აშშ',854:'ბურკინა ფასო',858:'ურუგვაი',860:'უზბეკეთი',862:'ვენესუელა',887:'იემენი',894:'ზამბია'};
+const CONT={eu:new Set([8,40,56,100,191,196,203,208,233,246,250,276,300,348,372,380,440,442,528,578,616,620,642,643,703,724,752,756,804,826]),as:new Set([4,50,64,96,116,156,275,356,360,364,368,376,392,398,400,408,410,414,417,418,422,458,496,524,586,608,634,682,704,760,762,764,784,792,860,887])};
+const EASY_IDS=new Set([643,124,840,156,76,36,356,32,398,12,180,682,484,360,729,434,364,496,604,148,562,24,466,710,170,231,68,478,818,834,566,862,586,508,792,250,276,826,724,752,380]);
+const DIFF_CFG={easy:{qSec:15,totalSec:60},medium:{qSec:10,totalSec:90},hard:{qSec:7,totalSec:120}};
+const W=768,H=440;
+let world=null,svgEl=null,geoPath=null,mapG=null,zoomBeh=null,featById={};
+let qPool=[],qs=[],score=0,answered=0,qNum=0,done=false,gameOver=false;
+let qTimerID=null,gTimerID=null,tv=0,gameSecsLeft=0;
+let streak=0,maxStreak=0,fastCount=0;
+let chosenCont='all',chosenDiff='medium',Q_SEC=10,chosenSec=90,isDay=false;
+function show(id){['ss','sp','sg','se'].forEach(s=>document.getElementById(s).className='scr'+(s===id?' on':''));}
+function sfb(t,c){const e=document.getElementById('fb');e.textContent=t;e.style.color=c||'var(--sub)';}
+function updScore(){document.getElementById('sc').textContent=score;}
+function updStreak(){document.getElementById('stk').textContent=streak>=3?'🔥 '+streak+' streak':streak>0?'×'+streak:'';}
+function shuf(a){return[...a].sort(()=>Math.random()-0.5);}
+function currentK(){try{return d3.zoomTransform(svgEl.node()).k;}catch{return 1;}}
+function getHi(){return parseInt(localStorage.getItem('geo_hi')||'0');}
+function setHi(v){localStorage.setItem('geo_hi',String(v));}
+function showHiOnHome(){const h=getHi();const c=document.getElementById('hi-card');if(h>0){document.getElementById('hi-card-score').textContent=h;c.classList.add('show');}else c.classList.remove('show');}
+function goHome(){clearInterval(qTimerID);clearInterval(gTimerID);if(mapG)resetMap();gameOver=true;document.getElementById('sbtn').style.display='';document.getElementById('lmsg').style.display='none';showHiOnHome();show('ss');}
+function toggleTheme(){isDay=!isDay;applyTheme();}
+function applyTheme(){['themeBtn','gmTheme'].forEach(id=>{const b=document.getElementById(id);if(b)b.textContent=isDay?'🌙':'☀️';});if(!svgEl)return;svgEl.select('rect').attr('fill',isDay?'#c0d8e8':'#060d18');mapG.selectAll('path.co').each(function(){if(!this._locked)this.setAttribute('fill',isDay?'#c8dfa0':'#1e4d7a');});mapG.select('.borders').attr('stroke',isDay?'#7ab560':'#060d18');}
+function getLand(){return isDay?'#c8dfa0':'#1e4d7a';}
+function selCont(c){chosenCont=c;document.querySelectorAll('.pill').forEach(e=>e.classList.remove('sel'));document.getElementById('cp_'+c).classList.add('sel');}
+function selDiff(d){chosenDiff=d;document.querySelectorAll('.dcard').forEach(e=>e.classList.remove('sel'));document.getElementById('dc_'+d).classList.add('sel');}
+async function loadMap(){world=await d3.json('https://cdn.jsdelivr.net/npm/world-atlas@2/countries-110m.json');buildMap();}
+function buildPool(){const cs=topojson.feature(world,world.objects.countries);const avail=new Set(cs.features.map(f=>+f.id));let entries=Object.entries(ALL).filter(([id])=>avail.has(+id));if(chosenCont!=='all'){const cset=CONT[chosenCont];entries=entries.filter(([id])=>cset.has(+id));}if(chosenDiff==='easy')entries=entries.filter(([id])=>EASY_IDS.has(+id));qPool=shuf(entries.map(([id,n])=>({id:+id,n})));}
+function buildMap(){const proj=d3.geoNaturalEarth1().scale(138).translate([W/2,H/2]);geoPath=d3.geoPath().projection(proj);svgEl=d3.select('#msvg').append('svg').attr('viewBox',`0 0 ${W} ${H}`).attr('width','100%');svgEl.append('rect').attr('width',W).attr('height',H).attr('fill','#060d18');mapG=svgEl.append('g');const cs=topojson.feature(world,world.objects.countries);cs.features.forEach(f=>featById[+f.id]=f);mapG.selectAll('path.co').data(cs.features).enter().append('path').attr('class','co').attr('d',geoPath).attr('id',d=>'C'+d.id).attr('fill','#1e4d7a').attr('stroke','#060d18').attr('stroke-width',0.4).on('click',function(ev,d){if(!ev.defaultPrevented)onClick(+d.id,this);});mapG.append('path').datum(topojson.mesh(world,world.objects.countries,(a,b)=>a!==b)).attr('class','borders').attr('fill','none').attr('stroke','#060d18').attr('stroke-width',0.35).attr('d',geoPath);zoomBeh=d3.zoom().scaleExtent([1,14]).translateExtent([[0,0],[W,H]]).on('start',()=>svgEl.classed('dragging',true)).on('zoom',(ev)=>{mapG.attr('transform',ev.transform);const k=ev.transform.k;mapG.selectAll('path.co').each(function(){if(!this._locked)this.setAttribute('stroke-width',0.4/k);});mapG.select('.borders').attr('stroke-width',0.35/k);}).on('end',()=>svgEl.classed('dragging',false));svgEl.call(zoomBeh);svgEl.on('dblclick.zoom',null);applyTheme();}
+function zIn(){svgEl.transition().duration(280).call(zoomBeh.scaleBy,1.6)}
+function zOut(){svgEl.transition().duration(280).call(zoomBeh.scaleBy,1/1.6)}
+function zReset(){svgEl.transition().duration(380).call(zoomBeh.transform,d3.zoomIdentity)}
+function startGameClock(){gameSecsLeft=chosenSec;updateClock();clearInterval(gTimerID);gTimerID=setInterval(()=>{gameSecsLeft--;updateClock();if(gameSecsLeft<=0){clearInterval(gTimerID);endGame();}},1000);}
+function updateClock(){const m=Math.floor(Math.max(0,gameSecsLeft)/60),s=Math.max(0,gameSecsLeft)%60;const el=document.getElementById('gclock');el.textContent=m+':'+(s<10?'0':'')+s;el.className='ck-val'+(gameSecsLeft<=30?' warn':'');}
+function revealGold(id){const c=document.getElementById('C'+id);if(!c)return;c._locked=true;c.setAttribute('fill','#FFD700');c.setAttribute('stroke','#FFA500');c.setAttribute('stroke-width',String(2/currentK()));}
+const ARROW='M 0,0 L -13,18 L -5,18 L -5,44 L 5,44 L 5,18 L 13,18 Z';
+function showArrow(id){mapG.select('#carr').remove();const feat=featById[id];if(!feat)return;const[cx,cy]=geoPath.centroid(feat);if(isNaN(cx)||isNaN(cy))return;const k=currentK(),s=1/k,d=32*s;const g=mapG.append('g').attr('id','carr').attr('pointer-events','none');g.append('path').attr('d',ARROW).attr('transform',`translate(${cx},${cy-d}) rotate(180) scale(${s*1.15})`).attr('fill','#fff').attr('opacity',0.9);g.append('path').attr('d',ARROW).attr('transform',`translate(${cx},${cy-d}) rotate(180) scale(${s})`).attr('fill','#22c55e');}
+function removeArrow(){mapG&&mapG.select('#carr').remove();}
+function resetMap(){removeArrow();if(!mapG)return;const k=currentK();const land=getLand();mapG.selectAll('path.co').each(function(){this._locked=false;this.setAttribute('fill',land);this.setAttribute('stroke',isDay?'#7ab560':'#060d18');this.setAttribute('stroke-width',String(0.4/k));});}
+function launchConfetti(){const wrap=document.getElementById('cfw');const colors=['#ff6b6b','#ffd93d','#6bcb77','#4d96ff','#ff922b','#cc5de8','#34d399','#f472b6'];for(let i=0;i<40;i++){const p=document.createElement('div');p.className='cfp';p.style.cssText=`width:${7+Math.random()*7}px;height:${7+Math.random()*7}px;background:${colors[Math.floor(Math.random()*colors.length)]};border-radius:${Math.random()>0.4?'50%':'3px'};left:${Math.random()*100}%`;wrap.appendChild(p);const dx=(Math.random()-0.5)*160,dy=80+Math.random()*200,rot=Math.random()*500;p.animate([{transform:'translate(0,0) rotate(0deg)',opacity:1},{transform:`translate(${dx}px,${dy}px) rotate(${rot}deg)`,opacity:0}],{duration:900+Math.random()*600,easing:'ease-out'}).onfinish=()=>p.remove();}}
+function onClick(id,el){if(done||gameOver)return;const q=qs[qNum-1];if(id===q.id){done=true;clearInterval(qTimerID);answered++;const fast=tv>55;const bonus=streak>=2?1:0;const pts=1+bonus+(fast?1:0);score+=pts;streak++;maxStreak=Math.max(maxStreak,streak);if(fast)fastCount++;el._locked=true;el.setAttribute('fill','#22c55e');el.setAttribute('stroke','#16a34a');el.setAttribute('stroke-width',String(1.5/currentK()));sfb('✓ '+q.n+(pts>1?` · +${pts}${fast?' ⚡':''}${bonus?' 🔥':''}`:' · +1'),'#4ade80');updScore();updStreak();launchConfetti();setTimeout(()=>{if(!gameOver){resetMap();nextQuestion();}},1000);}else{streak=0;updStreak();el.setAttribute('fill','#ef4444');setTimeout(()=>{if(!done&&!el._locked){el.setAttribute('fill',getLand());el.setAttribute('stroke',isDay?'#7ab560':'#060d18');el.setAttribute('stroke-width',String(0.4/currentK()));}},400);sfb('❌ არასწორი — სცადე კიდევ','#f87171');}}
+function nextQuestion(){if(gameOver)return;done=false;clearInterval(qTimerID);if(qNum>=qPool.length)qPool=shuf(qPool);const q=qPool[qNum%qPool.length];qNum++;qs[qNum-1]=q;document.getElementById('qnm').textContent=q.n;document.getElementById('qcount').textContent='კითხვა '+qNum;document.getElementById('fb').textContent='';tv=100;document.getElementById('tf').style.width='100%';const step=100/(Q_SEC*10);qTimerID=setInterval(()=>{tv-=step;document.getElementById('tf').style.width=Math.max(0,tv)+'%';if(tv<=0){clearInterval(qTimerID);if(!done&&!gameOver){done=true;answered++;streak=0;updStreak();revealGold(q.id);showArrow(q.id);sfb('⏰ დრო! · '+q.n,'#fb923c');setTimeout(()=>{if(!gameOver){resetMap();nextQuestion();}},800);}}},100);}
+function beginGame(){const cfg=DIFF_CFG[chosenDiff];Q_SEC=cfg.qSec;chosenSec=cfg.totalSec;buildPool();if(!qPool.length){alert('ქვეყნები ვერ მოიძებნა.');return;}score=0;answered=0;qNum=0;gameOver=false;qs=[];streak=0;maxStreak=0;fastCount=0;updScore();updStreak();show('sg');startGameClock();nextQuestion();}
+function doRestart(){clearInterval(qTimerID);clearInterval(gTimerID);resetMap();buildPool();score=0;answered=0;qNum=0;gameOver=false;qs=[];streak=0;maxStreak=0;fastCount=0;updScore();updStreak();show('sg');startGameClock();nextQuestion();}
+function endGame(){gameOver=true;clearInterval(qTimerID);clearInterval(gTimerID);const total=Math.max(1,answered),pct=Math.round(score/total*100);const hi=Math.max(score,getHi());setHi(hi);document.getElementById('fsc').textContent=String(score);document.getElementById('fsub').textContent=pct>=80?'შესანიშნავი! 🎉':pct>=50?'კარგი შედეგი! 👍':'სცადე კიდევ! 💪';document.getElementById('hi-val').textContent=hi;document.getElementById('stat-ans').textContent=answered;document.getElementById('stat-pct').textContent=pct+'%';document.getElementById('stat-streak').textContent=maxStreak;document.getElementById('stat-spd').textContent=fastCount;resetMap();show('se');}
+showHiOnHome();
+document.getElementById('sbtn').onclick=function(){if(world){show('sp');return;}this.style.display='none';document.getElementById('lmsg').style.display='block';loadMap().then(()=>show('sp')).catch(()=>{document.getElementById('lmsg').textContent='შეცდომა — შეამოწმე ინტერნეტი.';});};
+</script>
+</body>
+</html>
